@@ -8,11 +8,12 @@ import ply.lex as lex
 
 # List of token names.   
 tokens = ('QUOTE', 'SIMB', 'NUM', 'LPAREN', 'RPAREN', \
-'NIL', 'TRUE', 'FALSE', 'TEXT')
+'NIL', 'TRUE', 'FALSE', 'TEXT', 'LAMBDA')
 
 # Reserved words
 reserved = {
     'nil' : 'NIL',
+    'lambda': 'LAMBDA'
 }
 
 # Regular expression rules for simple tokens
@@ -21,7 +22,9 @@ t_RPAREN = r'\)'
 t_QUOTE = r'\''
 t_TRUE = r'\#t'
 t_FALSE = r'\#f'
+t_LAMBDA = r'lambda'
 
+# Revisar esto, en Python ningun entero es _too large_
 def t_NUM(t):
     r'\d+'
     try:

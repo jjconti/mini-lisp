@@ -1,0 +1,30 @@
+http://lib.store.yahoo.net/lib/paulgraham/jmc.ps
+
+- cómo se traduce 'yield'?
+
+- pag 5: el truco para tener if/else a partir de cond es tener un par ('t (exp por false))
+
+- defun reempaza a label con lambda
+
+
+La notacion *args representa una lista o una tupla?
+
+>>> a=lambda *x:x
+>>> a(1,2,3)
+(1, 2, 3)
+
+Luego de una hora pude correr algun ej sobre el código de nubis:
+
+ml> (lambda '(a b) '(+ a b))
+Lambda args: ['a', 'b']  body: ['+', 'a', 'b']
+<function <lambda> at 0xb7d61454>
+ml> ((lambda '(a b) '(+ a b)) '(1 2))
+Lambda args: ['a', 'b']  body: ['+', 'a', 'b']
+Calling <function <lambda> at 0xb7d61454> with [[1, 2]]
+([1, 2],)
+
+Tengo algo como esto:
+
+(+ ((lambda '(a b) '(+ a b)) '(1 2)) ((lambda '(a b) '(+ a b)) '(5 5)))
+
+pero todavía falta poder ponerle nombre a las funciones y tener niveles arbitrarios de anidamiento.

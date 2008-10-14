@@ -3,7 +3,7 @@ import ply.yacc as yacc
 # Get the token map from the lexer.  This is required.
 from lex import tokens
 
-DEBUG = True
+DEBUG = False
 
 # Namespace & built-in functions
 
@@ -75,6 +75,7 @@ name['print'] = _print
 #  Evaluation functions
 
 def lisp_eval(simb, items):
+    if DEBUG: print "Evaluando: ", simb, 'items: ', items
     if simb in name:
         return call(name[simb], eval_lists(items))
     else:
@@ -125,6 +126,10 @@ def lisp_str(l):
 
 def p_exp_atom(p):
     'exp : atom'
+    p[0] = p[1]
+
+def p_exp_lf(p):
+    'exp : lambda_func'
     p[0] = p[1]
 
 def p_exp_qlist(p):
@@ -212,6 +217,34 @@ def p_nil(p):
     'atom : NIL'
     p[0] = None
 
+# Lambda, by nubis
+
+def p_lambda(p):
+    'lambda_func : LPAREN LAMBDA items RPAREN'
+    if DEBUG: print "Lambda args:", p[3][0], ' body:', p[3][1]
+    p[0] = p[3] # [args body]
+
+def p_lambda_call(p):
+    'call : LPAREN lambda_func items RPAREN'
+    if DEBUG: print "Calling", p[2], "with", p[3]
+    #p[0] = p[2](*p[3])
+    args = p[2][0]
+    if DEBUG: print 'args, ', args
+    body = p[2][1]
+    if DEBUG: print 'body, ', body
+    bind = dict(zip(args, p[3][0]))
+    if DEBUG: print 'binding:', bind
+    op = body[0]
+    code = body[1:]
+    code = replace(bind, code)
+    p[0] = lisp_eval(op, code)
+
+def replace(b, c):
+    r = []
+    for i in c:
+        r.append(b.get(i,i))
+    if DEBUG: print r
+    return r
 # Error rule for syntax errors
 def p_error(p):
     print "Syntax error!! ",p
